@@ -1,0 +1,29 @@
+{
+    "name": "update-college-data",
+    "version": "1.0.0",
+    "description": "Update college data.",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.bundle.js",
+      "build": "webpack",
+      "dev": "nodemon ./server.js localhost 3080"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/uncetlab/gearup-college-data"
+    },
+    "author": "Alexis Barnes",
+    "license": "AFL-1.1",
+    "bugs": {
+      "url": "https://github.com/uncetlab/gearup-college-data/issues"
+    },
+    "homepage": "https://github.com/uncetlab/gearup-college-data#readme",
+    "dependencies": {
+      "express": "^4.17.1",
+      "http-proxy-middleware": "^1.0.4"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.4",
+      "webpack": "^4.43.0"
+    }
+  }
