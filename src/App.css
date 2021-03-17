@@ -3,9 +3,15 @@
 }
 
 .page-title {
+  color: #2D3354;
   text-align: center;
 }
 
 .page-info {
+  color: #2D3354;
   text-align: center;
+}
+
+.add-margin {
+  margin: 1rem;
 }

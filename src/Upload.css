@@ -1,5 +1,9 @@
+.upload {
+    margin: 1rem;
+}
+
 .MuiButton-contained {
-    background-color: #D4D943 !important;
+    background-color: #d7e035 !important;
 }
 
 .MuiButton-root {
