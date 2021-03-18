@@ -1,10 +1,13 @@
+import React, { Component } from 'react';
 import './App.css';
 import Grid from '@material-ui/core/Grid';
 import Upload from './components/Upload';
 
-function App() {
-  return (
-    <div className="main-container">
+class App extends Component {
+
+  render() {
+    return (
+      <div className="main-container">
       <Grid container spacing={3}>
         {/* PAGE HEADER */}
         <Grid className="banner" item xs={12}>
@@ -47,7 +50,8 @@ function App() {
         </Grid>
       </Grid>
     </div>
-  );
+    );
+  }
 }
 
 export default App;
