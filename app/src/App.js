@@ -3,9 +3,7 @@ import './App.css';
 import Grid from '@material-ui/core/Grid';
 import Upload from './components/Upload';
 
-class App extends Component {
-
-  render() {
+function App() {
     return (
       <div className="main-container">
       <Grid container spacing={3}>
@@ -51,7 +49,6 @@ class App extends Component {
       </Grid>
     </div>
     );
-  }
-}
+};
 
 export default App;
