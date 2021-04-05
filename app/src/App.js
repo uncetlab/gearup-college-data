@@ -1,7 +1,19 @@
-import React, { Component } from 'react';
-import './App.css';
-import Grid from '@material-ui/core/Grid';
-import Upload from './components/Upload';
+import React from 'react'
+import './App.css'
+import Grid from '@material-ui/core/Grid'
+import FormControl from '@material-ui/core/FormControl'
+// import InputLabel from '@material-ui/core/InputLabel'
+// import Input from '@material-ui/core/Input'
+// import FormHelperText from '@material-ui/core/FormHelperText'
+
+const getDirectory = (event) => {
+  let files = event.target.files
+
+  for (let i=0; i<files.length; i++) {
+    files.push(files[i].webkitRelativePath)
+  }
+  console.log(files)
+}
 
 function App() {
     return (
@@ -12,40 +24,21 @@ function App() {
           <h1 className="page-title">Update GEAR UP Colleges Data</h1>
           <p className="page-info">Navigate to each file below to update the college info. The clear button clears the page, so proceed with caution.</p>
         </Grid>
-        {/* UPLOAD UX_INS FILE */}
+        {/* Select Directory */}
         <Grid item xs={12}>
-          <h2 className="add-margin">Update UX_INS:</h2>
+          <h2 className="add-margin">Select Directory</h2>
+          <h3 className="add-margin">Should include files UX_INS, UG_ENROLL, UG_ENTR_EXAMS, UG_EXPENSE_ASGNS</h3>
           <p className="add-margin">Navigate to the UX_INS.csv file to update the college info.</p>
-          <Upload />
+
+          <FormControl className="add-margin">
+            <input type="file" webkitdirectory="" directory="" onClick={getDirectory}></input>
+          </FormControl>
+          
         </Grid>
 
-        {/* UPLOAD UG_ENROLL */}
-        <Grid item xs={12}>
-          <h2 className="add-margin">Update UG_ENROLL:</h2>
-          <p className="add-margin">Navigate to the UG_ENROLL.csv file to update the college enrollment.</p>
-          <Upload />
-        </Grid>
+        
 
-        {/* UPLOAD UG_ENTR_EXAMS */}
-        <Grid item xs={12}>
-          <h2 className="add-margin">Update UG_ENTR_EXAMS:</h2>
-          <p className="add-margin">Navigate to the UG_ENTR_EXAMS.csv file to update the college entry exam scores.</p>
-          <Upload />
-        </Grid>
-
-        {/* UPLOAD UG_EXPENSE_ASGNS */}
-        <Grid item xs={12}>
-          <h2 className="add-margin">Update UG_EXPENSE_ASGNS:</h2>
-          <p className="add-margin">Navigate to the UG_EXPENSE_ASGNS.csv file to update the college in-state and out-of-state tuition.</p>
-          <Upload />
-        </Grid>
-
-        {/* UPLOAD UG_ACAD_PROG_TYPES */}
-        <Grid item xs={12}>
-          <h2 className="add-margin">Update UG_ACAD_PROG_TYPES:</h2>
-          <p className="add-margin">Navigate to the UG_ACAD_PROG_TYPES.csv file to update the college in-state and out-of-state tuition.</p>
-          <Upload />
-        </Grid>
+      
       </Grid>
     </div>
     );
