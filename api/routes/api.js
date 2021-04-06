@@ -3,8 +3,8 @@ var router = express.Router()
 var fs = require('fs')
 const path = require('path')
 // const mysqlConnection = require('./connection')
-// const fastcsv = require('fast-csv')
 const csv = require('csv-parser')
+const createCsvWriter = require('csv-writer').createObjectCsvWriter
 
 
 // router.get("/", function(req, res, next) {
@@ -29,6 +29,12 @@ const readdir = (dirname) => {
     })
 }
 
+// const csvWriter = createCsvWriter({
+//     path: 'collegeData.csv',
+//     header: [
+//     ]
+// })
+
 readdir(currDir).then((filenames) => {
     filenames = filenames.filter(filtercsvFiles)
     // console.log(filenames)
@@ -46,16 +52,11 @@ readdir(currDir).then((filenames) => {
                 //push array of programs
             })
             .on('end', () => {
-                console.log('CSV file successfully processed')
-                
+                console.log('CSV successfully processed')
             })
         
     }
-
-
-
      
 })
-
 
 module.exports = router;
