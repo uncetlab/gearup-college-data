@@ -29,6 +29,25 @@ const readdir = (dirname) => {
     })
 }
 
+const contains = (value, key, objArray) => {
+    for (let i=0; i < objArray; i++) {
+        if (objArray[i][key] === value) {
+            return true
+        }
+    }
+
+    return false
+}
+
+const isEmpty = (objArray) => {
+    if (objArray.length === 0) {
+        return true
+    } else {
+        return false
+    }
+    
+}
+
 // const csvWriter = createCsvWriter({
 //     path: 'collegeData.csv',
 //     header: [
@@ -49,18 +68,23 @@ readdir(currDir).then((filenames) => {
                 })
                 .pipe(csv())
                 .on('data', (data) => {
-                    if (csvData.length === 0) {
-                        csvData.push(data)
+                    if (isEmpty(csvData)) {
+                        Object.keys(data)
+                        .forEach(function eachKey(key) {
+                            csvData[key] = data[key]
+                        })
                     } else {
-                        for(let j=0; j < csvData.length; j++) {
-                            if (csvData[j].INUN_ID === data.INUN_ID) {
-                                Object.keys(data)
-                                .forEach(function eachKey(key) {
-                                    csvData[j][key] = data[key]
-                                })
-                            }
+                        // close but only returning last value
+                        if (contains(data.INUN_ID, 'INUN_ID', csvData)) {
+                            Object.keys(data)
+                            .forEach(function eachKey(key) {
+                                csvData[j][key] = data[key]
+                            })
                         }
+
                     }
+                        
+                    
                     
                     // csvData.push(data)
                 })
