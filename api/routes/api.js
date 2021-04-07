@@ -68,11 +68,14 @@ readdir(currDir).then((filenames) => {
                 })
                 .pipe(csv())
                 .on('data', (data) => {
+
+                    
                     if (isEmpty(csvData)) {
                         Object.keys(data)
                         .forEach(function eachKey(key) {
                             csvData[key] = data[key]
                         })
+
                     } else {
                         // close but only returning last value
                         if (contains(data.INUN_ID, 'INUN_ID', csvData)) {
@@ -84,15 +87,12 @@ readdir(currDir).then((filenames) => {
 
                     }
                         
-                    
+                    // console.log(csvData)
                     
                     // csvData.push(data)
                 })
                 .on('end', () => {
                     // console.log('CSV successfully processed')
-                    if (i === 3) {
-                        console.log(csvData)
-                    }
                 })
             
         }
