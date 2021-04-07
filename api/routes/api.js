@@ -58,8 +58,6 @@ readdir(currDir).then((filenames) => {
                                 .forEach(function eachKey(key) {
                                     csvData[j][key] = data[key]
                                 })
-                            } else {
-                                csvData.push(data)
                             }
                         }
                     }
