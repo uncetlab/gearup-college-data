@@ -53,51 +53,56 @@ const isEmpty = (objArray) => {
 //     header: [
 //     ]
 // })
-readdir(currDir).then((filenames) => {
+async function finalData() { 
+        readdir(currDir).then((filenames) => {
+            
         filenames = filenames.filter(filtercsvFiles)
         // console.log(filenames)
         let csvData = []
 
         // populate csvData
-        for (let i=0; i < filenames.length; i++) {
-            let currFilePath = currDir + '/' + filenames[i]
-            // console.log(currFilePath)
-            fs.createReadStream(currFilePath)
-                .on('error', () => {
-                    console.log('error')
-                })
-                .pipe(csv())
-                .on('data', (data) => {
-
-                    
-                    if (isEmpty(csvData)) {
-                        Object.keys(data)
-                        .forEach(function eachKey(key) {
-                            csvData[key] = data[key]
-                        })
-
-                    } else {
-                        // close but only returning last value
-                        if (contains(data.INUN_ID, 'INUN_ID', csvData)) {
+            for (let i=0; i < filenames.length; i++) {
+                let currFilePath = currDir + '/' + filenames[i]
+                // console.log(currFilePath)
+                fs.createReadStream(currFilePath)
+                    .on('error', () => {
+                        console.log('error')
+                    })
+                    .pipe(csv())
+                    .on('data', (data) => {
+    
+                        
+                        if (isEmpty(csvData)) {
                             Object.keys(data)
                             .forEach(function eachKey(key) {
-                                csvData[j][key] = data[key]
+                                csvData[key] = data[key]
                             })
+    
+                        } else {
+                            if (contains(data.INUN_ID, 'INUN_ID', csvData)) {
+                                Object.keys(data)
+                                .forEach(function eachKey(key) {
+                                    csvData[j][key] = data[key]
+                                })
+                            }
+    
                         }
+                    })
+                    .on('end', () => {
+                        // console.log('CSV successfully processed')
+                        // resolve(csvData)
+                    })
+                
+            }
 
-                    }
-                        
-                    // console.log(csvData)
-                    
-                    // csvData.push(data)
-                })
-                .on('end', () => {
-                    // console.log('CSV successfully processed')
-                })
-            
-        }
         
-    })
+        
+        })
+
+ 
+}
+
+
 
 
 module.exports = router;
