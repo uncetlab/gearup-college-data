@@ -34,29 +34,48 @@ const readdir = (dirname) => {
 //     header: [
 //     ]
 // })
-
 readdir(currDir).then((filenames) => {
-    filenames = filenames.filter(filtercsvFiles)
-    // console.log(filenames)
-    let csvData = []
+        filenames = filenames.filter(filtercsvFiles)
+        // console.log(filenames)
+        let csvData = []
 
-    // populate csvData
-    for (let i=0; i < filenames.length; i++) {
-        let currFilePath = currDir + '/' + filenames[i]
-        // console.log(currFilePath)
-        fs.createReadStream(currFilePath)
-            .pipe(csv())
-            .on('data', (data) => {
-                csvData.push(data)
-                // console.log(csvData)
-                //push array of programs
-            })
-            .on('end', () => {
-                console.log('CSV successfully processed')
-            })
+        // populate csvData
+        for (let i=0; i < filenames.length; i++) {
+            let currFilePath = currDir + '/' + filenames[i]
+            // console.log(currFilePath)
+            fs.createReadStream(currFilePath)
+                .on('error', () => {
+                    console.log('error')
+                })
+                .pipe(csv())
+                .on('data', (data) => {
+                    if (csvData.length === 0) {
+                        csvData.push(data)
+                    } else {
+                        for(let j=0; j < csvData.length; j++) {
+                            if (csvData[j].INUN_ID === data.INUN_ID) {
+                                Object.keys(data)
+                                .forEach(function eachKey(key) {
+                                    csvData[j][key] = data[key]
+                                })
+                            } else {
+                                csvData.push(data)
+                            }
+                        }
+                    }
+                    
+                    // csvData.push(data)
+                })
+                .on('end', () => {
+                    // console.log('CSV successfully processed')
+                    if (i === 3) {
+                        console.log(csvData)
+                    }
+                })
+            
+        }
         
-    }
-     
-})
+    })
+
 
 module.exports = router;
