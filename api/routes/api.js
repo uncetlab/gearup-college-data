@@ -29,6 +29,8 @@ const readdir = (dirname) => {
     })
 }
 
+
+
 const contains = (value, key, objArray) => {
     for (let i=0; i < objArray; i++) {
         if (objArray[i][key] === value) {
@@ -38,6 +40,7 @@ const contains = (value, key, objArray) => {
 
     return false
 }
+
 
 const isEmpty = (objArray) => {
     if (objArray.length === 0) {
@@ -58,10 +61,13 @@ async function finalData() {
             
         filenames = filenames.filter(filtercsvFiles)
         // console.log(filenames)
-        let csvData = []
+        let csvData = {}
+        
+        //let finalData = [];
 
         // populate csvData
             for (let i=0; i < filenames.length; i++) {
+                
                 let currFilePath = currDir + '/' + filenames[i]
                 // console.log(currFilePath)
                 fs.createReadStream(currFilePath)
@@ -70,26 +76,45 @@ async function finalData() {
                     })
                     .pipe(csv())
                     .on('data', (data) => {
-    
-                        
-                        if (isEmpty(csvData)) {
-                            Object.keys(data)
-                            .forEach(function eachKey(key) {
-                                csvData[key] = data[key]
-                            })
-    
-                        } else {
-                            if (contains(data.INUN_ID, 'INUN_ID', csvData)) {
-                                Object.keys(data)
-                                .forEach(function eachKey(key) {
-                                    csvData[j][key] = data[key]
-                                })
-                            }
-    
-                        }
+                    const INUN_ID = data.INUN_ID;
+//                    if (!csvData[INUN_ID]) {
+//                        csvData[INUN_ID] = data;
+//                    } else {
+                        csvData[INUN_ID] = {...csvData[INUN_ID],...data};
+                    //}
+                    
+//                    if (isEmpty(csvData)) {
+//                        csvData.push(data);
+//                    } else if (contains(data.INUN_ID, 'INUN_ID', csvData){
+//                        
+//                    }
+//                    csvData.push(data);
+                    //console.log(data);
+//                    console.log(i);
+//                        
+//                        if (isEmpty(csvData)) {
+////                            Object.keys(data)
+////                            .forEach(function eachKey(key) {
+////                                //console.log(key, data[key])
+////                                csvData[key] = data[key]
+////                                console.log(csvData);
+////                            })
+//                            csvData['test'] = 'value';
+//                            csvData['test1'] = 'value1';
+//                            console.log(csvData);
+//                        } else {
+//                            if (contains(data.INUN_ID, 'INUN_ID', csvData)) {
+//                                Object.keys(data)
+//                                .forEach(function eachKey(key) {
+//                                    csvData[j][key] = data[key]
+//                                })
+//                            }
+//    
+//                        }
                     })
                     .on('end', () => {
-                        // console.log('CSV successfully processed')
+                         console.log('CSV successfully processed');
+                        console.log(csvData);
                         // resolve(csvData)
                     })
                 
@@ -102,7 +127,7 @@ async function finalData() {
  
 }
 
-
+finalData();
 
 
 module.exports = router;
