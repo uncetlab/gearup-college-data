@@ -4,10 +4,19 @@ var fs = require('fs')
 const path = require('path')
 const csv = require('csv-parser')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter
+const headers = require('./header.js')
+
+headerObj = headers.csvHeader
 
 
 
 const currDir = path.join(__dirname + '/../tmp')
+// console.log(__dirname)
+
+const csvWriter = createCsvWriter({
+    path: __dirname,
+    header: headerObj
+})
 
 const filtercsvFiles = (filenames) => {
     return filenames.split('.')[1] === 'csv'
@@ -25,37 +34,25 @@ const readdir = (dirname) => {
     })
 }
 
-
-
-const contains = (value, key, objArray) => {
-    for (let i=0; i < objArray; i++) {
-        if (objArray[i][key] === value) {
+const contains = (key) => {
+    values = ['INUN_ID', 'NAME', 'LINE1', 'LINE2', 'LINE3', 'CITY', 'STATE_CODE', 'ZIPCODE', 'COUNTY', 'URL_ADDRESS', 'MAIN_FUNCTION_TYPE', 'MAIN_INST_CONTROL', 'EN_TOT_N', 'TUIT_STATE_FT_D', 'TUIT_OVERALL_FT_D', 'TUIT_NRES_FT_D']
+    for (let i=0; i < values.length; i++) {
+        // console.log(key)
+        // console.log(values[i])
+        if (key === values[i]) {
             return true
         }
     }
-
     return false
 }
 
-
-const isEmpty = (objArray) => {
-    if (objArray.length === 0) {
-        return true
-    } else {
-        return false
-    }
-    
-}
-
-
-async function finalData() { 
-        readdir(currDir).then((filenames) => {
-            
-        filenames = filenames.filter(filtercsvFiles)
-        let csvData = {}
-
+const combineCSVs = (currDir, filenames) => {
+    return new Promise((resolve, reject) => {
+        let college = {}
+        if (filenames.length === 0) {
+            reject('No files')
+        } else {
             for (let i=0; i < filenames.length; i++) {
-                
                 let currFilePath = currDir + '/' + filenames[i]
                 fs.createReadStream(currFilePath)
                     .on('error', () => {
@@ -64,14 +61,66 @@ async function finalData() {
                     .pipe(csv())
                     .on('data', (data) => {
                         const INUN_ID = data.INUN_ID
-                        csvData[INUN_ID] = {...csvData[INUN_ID],...data}
+                        for (const key in data) {
+                            if (contains(key)) {
+                                // console.log(key)
+                                // now not showing all colleges...just last in list
+                               college[key] = data[key]
+                                
+                            }
+                        }
+                        // csvData[INUN_ID] = {...csvData[INUN_ID], ...data}
                     })
                     .on('end', () => {
-//                         console.log('CSV successfully processed');
-                        console.log(csvData)
+                        if (i===3) {
+                            resolve(college)
+                        }
                     })
             }
 
+        }
+        
+        
+    })
+    
+}
+
+
+async function finalData() { 
+        readdir(currDir).then((filenames) => {
+            
+        filenames = filenames.filter(filtercsvFiles)
+        // let csvData = {}
+
+//             for (let i=0; i < filenames.length; i++) {
+                
+//                 let currFilePath = currDir + '/' + filenames[i]
+//                 fs.createReadStream(currFilePath)
+//                     .on('error', () => {
+//                         console.log('error')
+//                     })
+//                     .pipe(csv())
+//                     .on('data', (data) => {
+//                         const INUN_ID = data.INUN_ID
+//                         csvData[INUN_ID] = {...csvData[INUN_ID],...data}
+//                     })
+//                     .on('end', () => {
+// //                         console.log('CSV successfully processed');
+//                         // console.log(csvData)
+//                         // return csvData
+//                     })
+//             }
+            combineCSVs(currDir, filenames).then((data) => { 
+                console.log(data)
+                // csvWriter.writeRecords(data).then(() => {
+                //     try {
+                //         console.log('...Done')
+                //     } catch {
+                //         console.log('Not working')
+                //     }
+                    
+                // })
+             })
         })
 
 }
