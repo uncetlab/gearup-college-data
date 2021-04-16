@@ -37,8 +37,6 @@ const readdir = (dirname) => {
 const contains = (key) => {
     values = ['INUN_ID', 'NAME', 'LINE1', 'LINE2', 'LINE3', 'CITY', 'STATE_CODE', 'ZIPCODE', 'COUNTY', 'URL_ADDRESS', 'MAIN_FUNCTION_TYPE', 'MAIN_INST_CONTROL', 'EN_TOT_N', 'TUIT_STATE_FT_D', 'TUIT_OVERALL_FT_D', 'TUIT_NRES_FT_D']
     for (let i=0; i < values.length; i++) {
-        // console.log(key)
-        // console.log(values[i])
         if (key === values[i]) {
             return true
         }
@@ -48,7 +46,8 @@ const contains = (key) => {
 
 const combineCSVs = (currDir, filenames) => {
     return new Promise((resolve, reject) => {
-        let college = {}
+        let collegesArr = []
+        
         if (filenames.length === 0) {
             reject('No files')
         } else {
@@ -62,19 +61,17 @@ const combineCSVs = (currDir, filenames) => {
                     .on('data', (data) => {
                         const INUN_ID = data.INUN_ID
                         for (const key in data) {
+                            // ned to create object in for loop
+                            // need to figure out how to properly add to array when complete
+                            let college = {}
                             if (contains(key)) {
-                                // console.log(key)
-                                // now not showing all colleges...just last in list
-                               college[key] = data[key]
-                                
+                              college[key] = data[key]
                             }
                         }
-                        // csvData[INUN_ID] = {...csvData[INUN_ID], ...data}
+                        
                     })
                     .on('end', () => {
-                        if (i===3) {
-                            resolve(college)
-                        }
+                        // console.log(college)
                     })
             }
 
@@ -111,7 +108,7 @@ async function finalData() {
 //                     })
 //             }
             combineCSVs(currDir, filenames).then((data) => { 
-                console.log(data)
+                // console.log(data)
                 // csvWriter.writeRecords(data).then(() => {
                 //     try {
                 //         console.log('...Done')
