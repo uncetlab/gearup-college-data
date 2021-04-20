@@ -27,27 +27,6 @@ const readdir = async (dirname) => {
 }
 
 
-
-const contains = (value, key, objArray) => {
-    for (let i=0; i < objArray; i++) {
-        if (objArray[i][key] === value) {
-            return true
-        }
-    }
-
-    return false
-}
-
-
-const isEmpty = (objArray) => {
-    if (objArray.length === 0) {
-        return true
-    } else {
-        return false
-    }
-    
-}
-
 const processFile = (filepath, dest) => { 
     return new Promise((resolve, reject) => {
         fs.createReadStream(filepath)
