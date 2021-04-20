@@ -14,7 +14,6 @@ const filtercsvFiles = (filenames) => {
 }
 
 const readdir = async (dirname) => {
-    //return await fs.readdir(dirname, undefined);
     return new Promise((resolve, reject) => {
         fs.readdir(dirname, (error, filenames) => {
             if (error) {
@@ -26,35 +25,13 @@ const readdir = async (dirname) => {
     })
 }
 
-
-
-const contains = (value, key, objArray) => {
-    for (let i=0; i < objArray; i++) {
-        if (objArray[i][key] === value) {
-            return true
-        }
-    }
-
-    return false
-}
-
-
-const isEmpty = (objArray) => {
-    if (objArray.length === 0) {
-        return true
-    } else {
-        return false
-    }
-    
-}
-
 const processFile = (filepath, dest) => { 
     return new Promise((resolve, reject) => {
         fs.createReadStream(filepath)
         .on('error', (e) => {
 
-            console.log('error')
-            reject(e);
+            console.log('error in processFile()')
+            reject(e)
         })
         .pipe(csv())
         .on('data', (data) => {
@@ -62,101 +39,88 @@ const processFile = (filepath, dest) => {
             dest[INUN_ID] = {...dest[INUN_ID],...data}
         })
         .on('end', () => {
-//                         console.log('CSV successfully processed');
-//                            console.log("processing")
-            resolve(true);
-            return;
+            resolve(true)
+            return
         })
 
     })
 
 }
 
-const processFile2 = (filepath, input, dest) => { 
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(filepath)
-        .on('error', (e) => {
-
-            console.log('error')
-            reject(e);
-        })
-        .pipe(csv())
-        .on('data', (data) => {
-            const INUN_ID = data.INUN_ID
-            dest[INUN_ID] = {...input[INUN_ID], ...data}
-//            data[INUN_ID] = {...data[INUN_ID], ...input}
-        })
-        .on('end', () => {
-//                         console.log('CSV successfully processed');
-//                            console.log("processing")
-            resolve(true);
-            return;
-        })
-
-    })
-
-}
-let bigData = {};
-let csvData = {};
+let csvData = {}
 async function finalData() { 
-     
         readdir(currDir).then((filenames) => {
-        //const filenames = await readdir(currDir);  
         filenames = filenames.filter(filtercsvFiles)
         
-            let promises = [];
+            let promises = []
             
             for (let i=0; i < filenames.length; i++) {
                 let currFilePath = currDir + '/' + filenames[i]
-                promises.push(processFile(currFilePath, csvData));
-                //console.log(i);
+                promises.push(processFile(currFilePath, csvData))
             }
-            return Promise.all(promises);
+            return Promise.all(promises)
 
         }).then(() =>{
 
-            var outputcsv = [];
+            var outputcsv = []
 
             for (var ID in csvData) {
                 outputcsv.push(csvData[ID]);
             }
             
-            var finalcsv = [], item;
+            var finalcsv = [], item
             for (const university of outputcsv ) {
-                item = {};
-                item.Address = university['EN_FRSH_FT_MEN_N'];
-                item.Student_Population = university['EN_FRSH_FT_WMN_N'];
-                item.Min_Sat_Score = university['EN_FRSH_PT_MEN_N'];
-                item.Min_Act_Score = university['EN_FRSH_PT_WMN_N'];
-                finalcsv.push(item);
-   
+                item = {}
+                item.INUN_ID = university['INUN_ID']
+                item.NAME = university['NAME']
+                item.LINE1 = university['LINE1']
+                item.LINE2 = university['LINE2']
+                item.LINE3 = university['LINE3']
+                item.CITY = university['CITY']
+                item.STATE_CODE = university['STATE_CODE']
+                item.ZIPCODE = university['ZIPCODE']
+                item.COUNTY = university['COUNTY']
+                item.URL_ADDRESS = university['URL_ADDRESS']
+                item.MAIN_FUNCTION_TYPE = university['MAIN_FUNCTION_TYPE']
+                item.MAIN_INST_CONTROL = university['MAIN_INST_CONTROL']
+                item.EN_TOT_N = university['EN_TOT_N']
+                item.TUIT_STATE_FT_D = university['TUIT_STATE_FT_D']
+                item.TUIT_NRES_FT_D = university['TUIT_NRES_FT_D']
+                item.TUIT_OVERALL_FT_D = university['TUIT_OVERALL_FT_D']
+                finalcsv.push(item)
             }
             
             csvWriter.writeRecords(finalcsv)       // returns a promise
                 .then(() => {
-                    console.log('...Done');
-            });
+                    console.log('...Done')
+            })
             
         } )
 
 }
 
-
-
 const csvWriter = createCsvWriter({
     path: '../exp_csv/2020.csv',
     header: [
-        {id: 'Address', title: 'Address'},
-        {id: 'Student_Population', title: 'Student_Population'},
-        {id: 'Min_Sat_Score', title: 'Min_Sat_Score'},
-        {id: 'Min_Act_Score', title: 'Min_Act_Score'},
-//        {id: 'instatetuition', title: 'In-State Tuition'},
-//        {id: 'outstatetuition', title: 'Out-of-State Tuition'}
+        {id: 'INUN_ID', title: 'INUN_ID'},
+        {id: 'NAME', title: 'NAME'},
+        {id: 'LINE', title: 'LINE1'},
+        {id: 'LINE2', title: 'LINE2'},
+        {id: 'LINE3', title: 'LINE3'},
+        {id: 'CITY', title: 'CITY'},
+        {id: 'STATE_CODE', title: 'STATE_CODE'},
+        {id: 'ZIPCODE', title: 'CITY'},
+        {id: 'COUNTY', title: 'COUNTY'},
+        {id: 'URL_ADDRESS', title: 'URL_ADDRESS'},
+        {id: 'MAIN_FUNCTION_TYPE', title: 'MAIN_FUNCTION_TYPE'},
+        {id: 'MAIN_INST_CONTROL', title: 'MAIN_INST_CONTROL'},
+        {id: 'EN_TOT_N', title: 'EN_TOT_N'},
+        {id: 'TUIT_STATE_FT_D', title: 'TUIT_STATE_FT_D'},
+        {id: 'TUIT_NRES_FT_D', title: 'TUIT_NRES_FT_D'},
+        {id: 'TUIT_OVERALL_FT_D', title: 'TUIT_OVERALL_FT_D'}
     ]
-});
+})
 
 finalData()
  
-
-
-module.exports = router;
+module.exports = router
