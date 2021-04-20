@@ -14,7 +14,6 @@ const filtercsvFiles = (filenames) => {
 }
 
 const readdir = async (dirname) => {
-    //return await fs.readdir(dirname, undefined);
     return new Promise((resolve, reject) => {
         fs.readdir(dirname, (error, filenames) => {
             if (error) {
@@ -25,7 +24,6 @@ const readdir = async (dirname) => {
         })
     })
 }
-
 
 const processFile = (filepath, dest) => { 
     return new Promise((resolve, reject) => {
@@ -51,11 +49,10 @@ const processFile = (filepath, dest) => {
 
 let csvData = {}
 async function finalData() { 
-     
         readdir(currDir).then((filenames) => {
         filenames = filenames.filter(filtercsvFiles)
         
-            let promises = [];
+            let promises = []
             
             for (let i=0; i < filenames.length; i++) {
                 let currFilePath = currDir + '/' + filenames[i]
@@ -96,13 +93,11 @@ async function finalData() {
             csvWriter.writeRecords(finalcsv)       // returns a promise
                 .then(() => {
                     console.log('...Done')
-            });
+            })
             
         } )
 
 }
-
-
 
 const csvWriter = createCsvWriter({
     path: '../exp_csv/2020.csv',
@@ -124,10 +119,8 @@ const csvWriter = createCsvWriter({
         {id: 'TUIT_NRES_FT_D', title: 'TUIT_NRES_FT_D'},
         {id: 'TUIT_OVERALL_FT_D', title: 'TUIT_OVERALL_FT_D'}
     ]
-});
+})
 
 finalData()
  
-
-
-module.exports = router;
+module.exports = router
