@@ -32,7 +32,7 @@ const processFile = (filepath, dest) => {
         fs.createReadStream(filepath)
         .on('error', (e) => {
 
-            console.log('error')
+            console.log('error in processFile()')
             reject(e)
         })
         .pipe(csv())
@@ -91,7 +91,6 @@ async function finalData() {
                 item.TUIT_NRES_FT_D = university['TUIT_NRES_FT_D']
                 item.TUIT_OVERALL_FT_D = university['TUIT_OVERALL_FT_D']
                 finalcsv.push(item)
-   
             }
             
             csvWriter.writeRecords(finalcsv)       // returns a promise
